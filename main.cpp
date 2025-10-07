@@ -10,12 +10,12 @@ void error_callback(int error, const char* description)
 int main()
 {
     glfwSetErrorCallback(error_callback);
-    f(!glfwInit())
+    if(!glfwInit())
     {
         return -1;
     }
 
-    window = glfwCreateWindow(640, 480, "Space Invaders", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(640, 480, "Space Invaders", NULL, NULL);
     if(!window)
     {
     	glfwTerminate();
