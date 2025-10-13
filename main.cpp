@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstdint>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -6,6 +7,12 @@ void error_callback(int error, const char* description)
 {
     fprintf(stderr, "Error: %s\n", description);
 }
+
+struct Buffer
+{
+    size_t width, height;
+    uint32_t* data;
+};
 
 int main()
 {
@@ -40,6 +47,16 @@ int main()
 
     printf("Using OpenGL: %d.%d\n", glVersion[0], glVersion[1]);
 
+    uint32_t rgb_to_uint32(uint8_t r, uint8_t g, uint8_t b){
+        return (r << 24) | (g << 16) | (b << 8) | 255;
+    }
+
+    void buffer_clear(Buffer* buffer, uint32_t color){
+        for(size_t i = 0; i < buffer->width * buffer->height; ++i){
+            buffer->data[i] = color;
+        }
+    }
+
     glClearColor(1.0, 0.0, 0.0, 1.0);
     while (!glfwWindowShouldClose(window))
     {
@@ -49,4 +66,5 @@ int main()
     }
     glfwDestroyWindow(window);
     glfwTerminate();
+
 }
