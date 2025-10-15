@@ -57,6 +57,44 @@ int main()
         }
     }
 
+    uint32_t clear_color = rgb_to_uint32(0, 128, 0);
+    Buffer buffer;
+    buffer.width  = buffer_width;
+    buffer.height = buffer_height;
+    buffer.data   = new uint32_t[buffer.width * buffer.height];
+    buffer_clear(&buffer, clear_color); 
+
+    const char* vertex_shader =
+     "\n"
+     "#version 330\n"
+     "\n"
+     "noperspective out vec2 TexCoord;\n"
+     "\n"
+     "void main(void){\n"
+     "\n"
+     "    TexCoord.x = (gl_VertexID == 2)? 2.0: 0.0;\n"
+     "    TexCoord.y = (gl_VertexID == 1)? 2.0: 0.0;\n"
+     "    \n"
+     "    gl_Position = vec4(2.0 * TexCoord - 1.0, 0.0, 1.0);\n"
+     "}\n";
+
+    const char* fragment_shader =
+     "\n"
+     "#version 330\n"
+     "\n"
+     "uniform sampler2D buffer;\n"
+     "noperspective in vec2 TexCoord;\n"
+     "\n"
+     "out vec3 outColor;\n"
+     "\n"
+     "void main(void){\n"
+     "    outColor = texture(buffer, TexCoord).rgb;\n"
+     "}\n";
+
+    GLuint fullscreen_triangle_vao;
+    glGenVertexArrays(1, &fullscreen_triangle_vao);
+    glBindVertexArray(fullscreen_triangle_vao);
+
     glClearColor(1.0, 0.0, 0.0, 1.0);
     while (!glfwWindowShouldClose(window))
     {
@@ -67,4 +105,4 @@ int main()
     glfwDestroyWindow(window);
     glfwTerminate();
 
-}
+
